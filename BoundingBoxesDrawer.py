@@ -5,7 +5,7 @@ class BoundingBoxesDrawer:
     def __init__(self):
         self.reader = easyocr.Reader(['it'], gpu=False)
 
-    def analyzeImage(self, image_path):
+    def findBoundingBoxes(self, image_path):
         image = cv2.imread(image_path)
         result = self.reader.readtext(image_path)
 

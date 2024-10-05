@@ -167,14 +167,20 @@ class UserInterface(QMainWindow):
         if folder_path:
             for filename in os.listdir(folder_path):
                 if filename.lower().endswith(('.png', '.jpg', '.bmp')):
-                    self.addImageToAnalysis(os.path.join(folder_path, filename))
+                    try:
+                        self.addImageToAnalysis(os.path.join(folder_path, filename))
+                    except Exception as e:
+                        self.showError(f"Error loading image {filename}: {str(e)}")
 
     def addImageToAnalysis(self, image_path):
-        image = Image(image_path)
-        self.current_images.append(image)
-        self.addImageToList(image)
-        if len(self.current_images) == 1:
-            self.displayImage(image)
+        try:
+            image = Image(image_path)
+            self.current_images.append(image)
+            self.addImageToList(image)
+            if len(self.current_images) == 1:
+                self.displayImage(image)
+        except Exception as e:
+            self.showError(f"Error adding image {image_path}: {str(e)}")
 
     def addImageToList(self, image):
         item = QListWidgetItem(os.path.basename(image.path))
@@ -187,9 +193,14 @@ class UserInterface(QMainWindow):
         self.displayAnalysisResult(image)
 
     def displayImage(self, image):
-        pixmap = self.getPixmap(cv2.imread(image.path))
-        self.image_label.setPixmap(pixmap)
-        self.fixImageToView()
+        try:
+            pixmap = self.getPixmap(cv2.imread(image.path))
+            if pixmap.isNull():
+                raise ValueError("Failed to create valid pixmap")
+            self.image_label.setPixmap(pixmap)
+            self.fixImageToView()
+        except Exception as e:
+            self.showError(f"Error displaying image {image.path}: {str(e)}")
 
     def displayAnalysisResult(self, image):
         result = self.result_manager.getResult(image.path)
@@ -248,15 +259,17 @@ class UserInterface(QMainWindow):
             return
 
         total_images = len(self.current_images)
+        successful_analyses = 0
         for i, image in enumerate(self.current_images, 1):
             try:
                 self.analyzeImage(image, selected_model)
+                successful_analyses += 1
                 self.updateStatus(f"Analyzed {i}/{total_images} images")
             except Exception as e:
                 self.showError(f"Error analyzing image {image.path}: {str(e)}")
 
-        self.showInfo(f"Analysis complete. Analyzed {total_images} images.")
-
+        self.showInfo(f"Analysis complete. Successfully analyzed {successful_analyses}/{total_images} images.")
+        
     def analyzeImage(self, image, model_name):
         original_image = cv2.imread(image.path)
         annotated_image, text, predictions, bounding_boxes = self.image_analyzer.analyze(image.path)
@@ -299,6 +312,9 @@ class UserInterface(QMainWindow):
         return label
 
     def getPixmap(self, image, size=None):
+        if image is None or image.size == 0:
+            return QPixmap()
+
         if len(image.shape) == 2:
             height, width = image.shape
             bytes_per_line = width
@@ -309,7 +325,7 @@ class UserInterface(QMainWindow):
             q_image = QImage(image.data, width, height, bytes_per_line, QImage.Format_RGB888).rgbSwapped()
         
         pixmap = QPixmap.fromImage(q_image)
-        if size:
+        if size and size[0] > 0 and size[1] > 0:
             return pixmap.scaled(size[0], size[1], Qt.KeepAspectRatio, Qt.SmoothTransformation)
         return pixmap
 
