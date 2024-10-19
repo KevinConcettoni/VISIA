@@ -27,7 +27,7 @@ class UserInterface(QMainWindow):
         self.applyStyles()
 
     def setWindowProperties(self):
-        self.setWindowTitle('Image Analyzer')
+        self.setWindowTitle('VISIA')
         self.setGeometry(100, 100, 1200, 800)
 
     def createCentralWidget(self):
@@ -126,35 +126,105 @@ class UserInterface(QMainWindow):
 
     def setColorScheme(self):
         palette = QPalette()
-        palette.setColor(QPalette.Window, QColor(240, 240, 240))
-        palette.setColor(QPalette.WindowText, QColor(0, 0, 0))
-        palette.setColor(QPalette.Base, QColor(255, 255, 255))
-        palette.setColor(QPalette.AlternateBase, QColor(245, 245, 245))
-        palette.setColor(QPalette.ToolTipBase, QColor(255, 255, 220))
-        palette.setColor(QPalette.ToolTipText, QColor(0, 0, 0))
-        palette.setColor(QPalette.Text, QColor(0, 0, 0))
-        palette.setColor(QPalette.Button, QColor(240, 240, 240))
-        palette.setColor(QPalette.ButtonText, QColor(0, 0, 0))
-        palette.setColor(QPalette.BrightText, QColor(255, 0, 0))
-        palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-        palette.setColor(QPalette.HighlightedText, QColor(255, 255, 255))
+        # Main application colors - Blue theme
+        palette.setColor(QPalette.Window, QColor(235, 242, 250))  # Light blue background
+        palette.setColor(QPalette.WindowText, QColor(25, 25, 112))  # Dark blue text
+        palette.setColor(QPalette.Base, QColor(255, 255, 255))  # White background for inputs
+        palette.setColor(QPalette.AlternateBase, QColor(225, 235, 245))  # Lighter blue for alternating rows
+        palette.setColor(QPalette.ToolTipBase, QColor(230, 240, 255))  # Very light blue for tooltips
+        palette.setColor(QPalette.ToolTipText, QColor(25, 25, 112))  # Dark blue tooltip text
+        palette.setColor(QPalette.Text, QColor(25, 25, 112))  # Dark blue text
+        palette.setColor(QPalette.Button, QColor(100, 149, 237))  # Cornflower blue for buttons
+        palette.setColor(QPalette.ButtonText, QColor(255, 255, 255))  # White text for buttons
+        palette.setColor(QPalette.BrightText, QColor(0, 0, 255))  # Blue for emphasis
+        palette.setColor(QPalette.Highlight, QColor(65, 105, 225))  # Royal blue for selection
+        palette.setColor(QPalette.HighlightedText, QColor(255, 255, 255))  # White text for selected items
         self.setPalette(palette)
 
     def getStyleSheet(self):
         return """
-        QMainWindow, QWidget { background-color: #f0f0f0; }
-        QToolBar { border: none; background-color: #e0e0e0; spacing: 6px; padding: 3px; }
-        QPushButton { background-color: #b0b0b0; color: white; border: none; padding: 5px; border-radius: 3px; }
-        QPushButton:hover { background-color: #c0c0c0; }
-        QPushButton:pressed { background-color: #a0a0a0; }
-        QComboBox, QListWidget { border: 1px solid #c0c0c0; border-radius: 3px; padding: 5px; }
-        QComboBox { min-width: 6em; }
-        QTabWidget::pane { border: 1px solid #c0c0c0; border-radius: 3px; }
-        QTabBar::tab { background-color: #e0e0e0; border: 1px solid #c0c0c0; border-bottom-color: #c0c0c0;
-                    border-top-left-radius: 4px; border-top-right-radius: 4px; min-width: 8ex; padding: 5px; }
-        QTabBar::tab:selected, QTabBar::tab:hover { background-color: #f0f0f0; }
-        QTabBar::tab:selected { border-color: #9B9B9B; border-bottom-color: #f0f0f0; }
-        QStatusBar { background-color: #e0e0e0; }
+        QMainWindow, QWidget { 
+            background-color: #ebf2fa; 
+        }
+        QToolBar { 
+            border: none; 
+            background-color: #c9ddf1; 
+            spacing: 6px; 
+            padding: 3px; 
+        }
+        QPushButton { 
+            background-color: #6495ED; 
+            color: white; 
+            border: none; 
+            padding: 5px; 
+            border-radius: 3px; 
+        }
+        QPushButton:hover { 
+            background-color: #4169E1; 
+        }
+        QPushButton:pressed { 
+            background-color: #1E90FF; 
+        }
+        QComboBox, QListWidget { 
+            border: 1px solid #A4C2F4; 
+            border-radius: 3px; 
+            padding: 5px; 
+            background-color: white;
+        }
+        QComboBox { 
+            min-width: 6em; 
+        }
+        QComboBox:hover {
+            border: 1px solid #6495ED;
+        }
+        QTabWidget::pane { 
+            border: 1px solid #A4C2F4; 
+            border-radius: 3px; 
+        }
+        QTabBar::tab { 
+            background-color: #c9ddf1; 
+            border: 1px solid #A4C2F4; 
+            border-bottom-color: #A4C2F4;
+            border-top-left-radius: 4px; 
+            border-top-right-radius: 4px; 
+            min-width: 8ex; 
+            padding: 5px; 
+        }
+        QTabBar::tab:selected, QTabBar::tab:hover { 
+            background-color: #ebf2fa; 
+        }
+        QTabBar::tab:selected { 
+            border-color: #6495ED; 
+            border-bottom-color: #ebf2fa; 
+        }
+        QStatusBar { 
+            background-color: #c9ddf1; 
+            color: #191970;
+        }
+        QListWidget::item:selected {
+            background-color: #4169E1;
+            color: white;
+        }
+        QListWidget::item:hover {
+            background-color: #A4C2F4;
+        }
+        QScrollBar:vertical {
+            border: none;
+            background-color: #ebf2fa;
+            width: 10px;
+            margin: 0px;
+        }
+        QScrollBar::handle:vertical {
+            background-color: #6495ED;
+            border-radius: 5px;
+            min-height: 20px;
+        }
+        QScrollBar::handle:vertical:hover {
+            background-color: #4169E1;
+        }
+        QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+            height: 0px;
+        }
         """
 
     def loadImage(self):
